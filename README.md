@@ -24,10 +24,6 @@ A beautiful Flutter anime streaming app powered by AniList's GraphQL API, featur
 - **Font**: Poppins
 - **Streaming**: Enhanced WebView with AnimeKai
 
-## 📱 Screenshots
-
-*[Add screenshots of your app here]*
-
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -41,8 +37,8 @@ A beautiful Flutter anime streaming app powered by AniList's GraphQL API, featur
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/flutter_shonen_shelf.git
-   cd flutter_shonen_shelf
+   git clone https://github.com/aniketapai/flutter_shonen_shelf_app.git
+   cd flutter_shonen_shelf_app
    ```
 
 2. **Install dependencies**
