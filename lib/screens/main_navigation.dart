@@ -89,6 +89,7 @@ class _MainNavigationState extends ConsumerState<MainNavigation> {
                     : AppColors.textSecondary,
                 fontSize: 12,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                fontFamily: 'Poppins',
               ),
             ),
           ],

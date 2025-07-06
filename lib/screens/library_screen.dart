@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'settings_screen.dart';
 import '../providers/service_providers.dart';
+import '../theme/app_theme.dart';
 import '../services/anilist_service.dart';
-import '../services/user_anime_storage_service.dart';
-import 'package:flutter_shonen_shelf/theme/app_theme.dart';
 import 'anime_details_screen.dart';
 import 'search_screen.dart';
+import 'settings_screen.dart';
 
 class LibraryScreen extends ConsumerStatefulWidget {
   const LibraryScreen({super.key});
@@ -54,7 +53,10 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen>
                             ref.invalidate(userAnimeListsProvider);
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                content: Text('Library refreshed!'),
+                                content: Text(
+                                  'Library refreshed!',
+                                  style: TextStyle(fontFamily: 'Poppins'),
+                                ),
                                 backgroundColor: Colors.green,
                                 duration: Duration(seconds: 2),
                               ),
@@ -490,6 +492,7 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen>
                             SnackBar(
                               content: Text(
                                 'Warning: Could not sync with AniList. Anime removed locally.',
+                                style: const TextStyle(fontFamily: 'Poppins'),
                               ),
                               backgroundColor: Colors.orange,
                               duration: const Duration(seconds: 3),
@@ -527,6 +530,7 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen>
                           SnackBar(
                             content: Text(
                               'Removed "${media['title']['romaji']}" from your list',
+                              style: const TextStyle(fontFamily: 'Poppins'),
                             ),
                             backgroundColor: Colors.green,
                             duration: const Duration(seconds: 2),
@@ -542,7 +546,10 @@ class _LibraryScreenState extends ConsumerState<LibraryScreen>
                       if (context.mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text('Failed to delete: $e'),
+                            content: Text(
+                              'Failed to delete: $e',
+                              style: const TextStyle(fontFamily: 'Poppins'),
+                            ),
                             backgroundColor: Colors.red,
                             duration: const Duration(seconds: 3),
                           ),

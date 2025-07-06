@@ -67,6 +67,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
               style: Theme.of(context).textTheme.displayMedium?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: Theme.of(context).colorScheme.primary,
+                fontFamily: 'Poppins',
               ),
             ),
             const SizedBox(height: 8),
@@ -74,9 +75,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
             // Subtitle
             Text(
               'Your Anime Collection',
-              style: Theme.of(
-                context,
-              ).textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                color: AppColors.textSecondary,
+                fontFamily: 'Poppins',
+              ),
             ),
             const SizedBox(height: 48),
 

@@ -14,58 +14,147 @@ class LoginScreen extends ConsumerWidget {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 24.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // App Logo
+              const Spacer(flex: 2),
+
+              // Saitama Image with improved styling
               Container(
-                width: 120,
-                height: 120,
+                width: 100,
+                height: 100,
                 decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary,
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: AppColors.textPrimary.withValues(alpha: 0.1),
+                    width: 1,
+                  ),
                 ),
-                child: const Icon(
-                  Icons.tv,
-                  size: 60,
-                  color: AppColors.textPrimary,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(16),
+                  child: Image.asset(
+                    'assets/images/saitama.png',
+                    width: 100,
+                    height: 100,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        width: 100,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          color: AppColors.card,
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: AppColors.textPrimary.withValues(alpha: 0.1),
+                            width: 1,
+                          ),
+                        ),
+                        child: const Icon(
+                          Icons.tv,
+                          size: 40,
+                          color: AppColors.textPrimary,
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
-              const SizedBox(height: 32),
+              const SizedBox(height: 24),
 
-              // Welcome Text
+              // Welcome Text with improved typography
               Text(
-                'Welcome to Shonen Shelf',
-                style: Theme.of(context).textTheme.displaySmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.primary,
+                'Welcome to',
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.textSecondary,
+                  fontSize: 20,
                 ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 4),
+              Text(
+                'Shonen Shelf',
+                style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                  fontFamily: 'Poppins',
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.textPrimary,
+                  fontSize: 32,
+                  letterSpacing: -0.5,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 12),
 
               Text(
                 'Your personal anime collection',
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontFamily: 'Poppins',
+                  color: AppColors.textSecondary,
+                  fontWeight: FontWeight.w400,
+                  fontSize: 16,
+                ),
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(height: 48),
 
-              // Login with AniList Button
+              const Spacer(flex: 1),
+
+              // Info Text with improved styling
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: AppColors.card,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: AppColors.textSecondary.withValues(alpha: 0.2),
+                    width: 1,
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: AppColors.textPrimary.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: const Icon(
+                        Icons.info_outline,
+                        color: AppColors.textSecondary,
+                        size: 16,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        'You\'ll be redirected to AniList to authorize this app',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          fontFamily: 'Poppins',
+                          color: AppColors.textSecondary,
+                          fontWeight: FontWeight.w400,
+                          height: 1.4,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 24),
+
+              // Login Button - smaller and cleaner
               SizedBox(
                 width: double.infinity,
-                height: 56,
+                height: 48,
                 child: ElevatedButton.icon(
                   onPressed: authState.isLoading
                       ? null
                       : () => ref.read(authStateProvider.notifier).login(),
                   icon: authState.isLoading
                       ? const SizedBox(
-                          width: 20,
-                          height: 20,
+                          width: 16,
+                          height: 16,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
                             valueColor: AlwaysStoppedAnimation<Color>(
@@ -73,83 +162,76 @@ class LoginScreen extends ConsumerWidget {
                             ),
                           ),
                         )
-                      : Icon(Icons.login, color: AppColors.textPrimary),
+                      : const Icon(
+                          Icons.login,
+                          color: AppColors.textPrimary,
+                          size: 18,
+                        ),
                   label: Text(
                     authState.isLoading
                         ? 'Connecting...'
                         : 'Login with AniList',
                     style: const TextStyle(
                       fontFamily: 'Poppins',
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
                       color: AppColors.textPrimary,
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.card,
+                    backgroundColor: AppColors.background,
                     foregroundColor: AppColors.textPrimary,
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(12),
+                      side: const BorderSide(
+                        color: AppColors.textPrimary,
+                        width: 2,
+                      ),
                     ),
+                    elevation: 0,
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                   ),
                 ),
               ),
 
-              const SizedBox(height: 24),
-
-              // Info Text
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: AppColors.card,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: AppColors.textSecondary),
-                ),
-                child: Column(
-                  children: [
-                    Icon(
-                      Icons.info_outline,
-                      color: AppColors.textSecondary,
-                      size: 24,
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'You\'ll be redirected to AniList to authorize this app',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: AppColors.textSecondary,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
-              ),
-
+              // Error message with improved styling
               if (authState.error != null) ...[
                 const SizedBox(height: 16),
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.red[900],
+                    color: Colors.red.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
+                    border: Border.all(
+                      color: Colors.red.withValues(alpha: 0.3),
+                      width: 1,
+                    ),
                   ),
                   child: Row(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.error_outline,
-                        color: Colors.red,
-                        size: 20,
+                        color: Colors.red[400],
+                        size: 16,
                       ),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           authState.error!,
-                          style: const TextStyle(color: Colors.red),
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            color: Colors.red[400],
+                            fontWeight: FontWeight.w500,
+                            fontSize: 13,
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
               ],
+
+              const Spacer(flex: 2),
             ],
           ),
         ),

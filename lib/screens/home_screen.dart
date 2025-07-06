@@ -89,6 +89,7 @@ class HomeScreen extends ConsumerWidget {
                                 ?.copyWith(
                                   color: AppColors.textSecondary,
                                   fontWeight: FontWeight.w500,
+                                  fontFamily: 'Poppins',
                                 ),
                           ),
                           const SizedBox(height: 4),
@@ -99,6 +100,7 @@ class HomeScreen extends ConsumerWidget {
                                   color: AppColors.textPrimary,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 24,
+                                  fontFamily: 'Poppins',
                                 ),
                           ),
                           const SizedBox(height: 8),
@@ -124,6 +126,7 @@ class HomeScreen extends ConsumerWidget {
                                   ?.copyWith(
                                     color: AppColors.textPrimary,
                                     fontWeight: FontWeight.w600,
+                                    fontFamily: 'Poppins',
                                   ),
                             ),
                           ),
@@ -172,6 +175,7 @@ class HomeScreen extends ConsumerWidget {
                 'Quick Actions',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.w600,
+                  fontFamily: 'Poppins',
                 ),
               ),
               const SizedBox(height: 16),
@@ -213,6 +217,7 @@ class HomeScreen extends ConsumerWidget {
                         style: Theme.of(context).textTheme.titleSmall?.copyWith(
                           fontWeight: FontWeight.w600,
                           color: AppColors.textPrimary,
+                          fontFamily: 'Poppins',
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -221,6 +226,7 @@ class HomeScreen extends ConsumerWidget {
                         'Account',
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: AppColors.textSecondary,
+                          fontFamily: 'Poppins',
                         ),
                         textAlign: TextAlign.center,
                       ),
@@ -231,42 +237,6 @@ class HomeScreen extends ConsumerWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildQuickActionCard(
-    BuildContext context,
-    IconData icon,
-    String title,
-    String subtitle,
-  ) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.card,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.textSecondary),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(icon, color: Theme.of(context).colorScheme.primary, size: 24),
-          const SizedBox(height: 8),
-          Text(
-            title,
-            style: Theme.of(
-              context,
-            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            subtitle,
-            style: Theme.of(
-              context,
-            ).textTheme.bodySmall?.copyWith(color: AppColors.textSecondary),
-          ),
-        ],
       ),
     );
   }

@@ -1,6 +1,3 @@
-import 'dart:convert';
-import 'package:http/http.dart' as http;
-
 class EpisodeContentService {
   // Mock database of episode content (thumbnails, screenshots, info)
   // In a real app, this would be fetched from your backend API
@@ -134,13 +131,13 @@ class EpisodeContentService {
     }
 
     // Try partial matching (case insensitive)
-    final normalizedTitle = title.toLowerCase();
-    for (final key in _episodeContent.keys) {
-      if (key.toLowerCase().contains(normalizedTitle) ||
-          normalizedTitle.contains(key.toLowerCase())) {
-        return key;
-      }
-    }
+    // final normalizedTitle = title.toLowerCase();
+    // for (final key in _episodeContent.keys) {
+    //   if (key.toLowerCase().contains(normalizedTitle) ||
+    //       normalizedTitle.contains(key.toLowerCase())) {
+    //     return key;
+    //   }
+    // }
 
     // Return original title if no match found
     return title;
@@ -177,7 +174,7 @@ class EpisodeContentService {
       // Fallback to mock data
       final Map<int, Map<String, dynamic>> episodeInfo = {};
       for (int episode = 1; episode <= totalEpisodes; episode++) {
-        episodeInfo[episode] = _generateEpisodeInfo(animeTitle, episode);
+        // episodeInfo[episode] = _generateEpisodeInfo(animeTitle, episode);
       }
       return episodeInfo;
     }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:flutter_shonen_shelf/theme/app_theme.dart';
 import 'anime_details_screen.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
@@ -70,7 +69,10 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text('Search Anime'),
+        title: const Text(
+          'Search Anime',
+          style: TextStyle(fontFamily: 'Poppins'),
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -83,6 +85,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
               style: const TextStyle(fontFamily: 'Poppins'),
               decoration: InputDecoration(
                 hintText: 'Search for anime...',
+                hintStyle: const TextStyle(fontFamily: 'Poppins'),
                 prefixIcon: const Icon(Icons.search),
                 suffixIcon: _controller.text.isNotEmpty
                     ? IconButton(
@@ -123,12 +126,23 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             if (_loading) const Center(child: CircularProgressIndicator()),
             if (_error != null)
               Center(
-                child: Text(_error!, style: const TextStyle(color: Colors.red)),
+                child: Text(
+                  _error!,
+                  style: const TextStyle(
+                    color: Colors.red,
+                    fontFamily: 'Poppins',
+                  ),
+                ),
               ),
             if (!_loading && _error == null)
               Expanded(
                 child: _results.isEmpty
-                    ? const Center(child: Text('No results'))
+                    ? const Center(
+                        child: Text(
+                          'No results',
+                          style: TextStyle(fontFamily: 'Poppins'),
+                        ),
+                      )
                     : ListView.separated(
                         itemCount: _results.length,
                         separatorBuilder: (_, __) => const SizedBox(height: 12),
@@ -174,6 +188,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                                               .titleMedium
                                               ?.copyWith(
                                                 fontWeight: FontWeight.bold,
+                                                fontFamily: 'Poppins',
                                               ),
                                           maxLines: 2,
                                           overflow: TextOverflow.ellipsis,
@@ -183,9 +198,10 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                                           anime['averageScore'] != null
                                               ? 'Rating: ${anime['averageScore']}/100'
                                               : 'No rating',
-                                          style: Theme.of(
-                                            context,
-                                          ).textTheme.bodySmall,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall
+                                              ?.copyWith(fontFamily: 'Poppins'),
                                         ),
                                       ],
                                     ),

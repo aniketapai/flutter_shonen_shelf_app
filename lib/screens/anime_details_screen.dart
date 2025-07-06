@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:ui';
+import '../services/anilist_service.dart';
 import '../theme/app_theme.dart';
 import '../providers/service_providers.dart';
-import '../services/anilist_service.dart';
-import '../services/user_anime_storage_service.dart';
-import 'episode_blocks_screen.dart';
+import 'enhanced_webview_screen.dart';
 
 class AnimeDetailsScreen extends ConsumerStatefulWidget {
   final Map<String, dynamic> anime;
@@ -28,8 +27,6 @@ class _AnimeDetailsScreenState extends ConsumerState<AnimeDetailsScreen> {
   double? _score;
   late TextEditingController _progressController;
   late TextEditingController _scoreController;
-  int?
-  _lastAnimeId; // Track last loaded anime to avoid repeated controller updates
 
   static const List<String> _statusOptions = [
     'CURRENT',
@@ -93,7 +90,6 @@ class _AnimeDetailsScreenState extends ConsumerState<AnimeDetailsScreen> {
         _score = entryScore != null ? (entryScore as num).toDouble() : 0.0;
         _progressController.text = (_progress ?? 0).toString();
         _scoreController.text = (_score ?? 0.0).toString();
-        _lastAnimeId = animeId;
 
         // Merge user data into detailedAnime for easy access
         _detailedAnime = Map<String, dynamic>.from(detailedAnime);
@@ -120,11 +116,11 @@ class _AnimeDetailsScreenState extends ConsumerState<AnimeDetailsScreen> {
     }
 
     final anime = _detailedAnime ?? widget.anime['media'] ?? widget.anime;
-    final progress = anime['progress'];
-    final episodes = anime['episodes'] ?? anime['media']?['episodes'] ?? '?';
-    final score = anime['score'];
-    final originalStatus =
-        (_detailedAnime ?? widget.anime['media'] ?? widget.anime)['status'];
+    // final progress = anime['progress'];
+    // final episodes = anime['episodes'] ?? anime['media']?['episodes'] ?? '?';
+    // final score = anime['score'];
+    // final originalStatus =
+    //     (_detailedAnime ?? widget.anime['media'] ?? widget.anime)['status'];
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -218,6 +214,36 @@ class _AnimeDetailsScreenState extends ConsumerState<AnimeDetailsScreen> {
                       ),
                     ),
                   ),
+                  // Status Badge in Bottom Right
+                  Positioned(
+                    bottom: 16,
+                    right: 16,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: _getStatusColor(anime['status']),
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.3),
+                            blurRadius: 8,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: Text(
+                        _getStatusText(anime['status']),
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'Poppins',
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -231,66 +257,36 @@ class _AnimeDetailsScreenState extends ConsumerState<AnimeDetailsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Title and Rating
-                  Row(
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                      Text(
+                        anime['title']['userPreferred'] ??
+                            anime['title']['english'] ??
+                            'Unknown Title',
+                        style: Theme.of(context).textTheme.headlineLarge
+                            ?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.textPrimary,
+                              fontFamily: 'Poppins',
+                            ),
+                      ),
+                      const SizedBox(height: 8),
+                      if (anime['averageScore'] != null)
+                        Row(
                           children: [
+                            Icon(Icons.star, size: 16, color: Colors.amber),
+                            const SizedBox(width: 4),
                             Text(
-                              anime['title']['userPreferred'] ??
-                                  anime['title']['english'] ??
-                                  'Unknown Title',
-                              style: Theme.of(context).textTheme.headlineLarge
+                              '${(anime['averageScore'] / 10).toStringAsFixed(1)}',
+                              style: Theme.of(context).textTheme.bodyMedium
                                   ?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: AppColors.textPrimary,
+                                    color: AppColors.textSecondary,
+                                    fontFamily: 'Poppins',
                                   ),
                             ),
-                            const SizedBox(height: 8),
-                            if (anime['averageScore'] != null)
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.star,
-                                    size: 16,
-                                    color: Colors.amber,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    '${(anime['averageScore'] / 10).toStringAsFixed(1)}',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium
-                                        ?.copyWith(
-                                          color: AppColors.textSecondary,
-                                        ),
-                                  ),
-                                ],
-                              ),
                           ],
                         ),
-                      ),
-                      // Status Badge
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: _getStatusColor(originalStatus),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Text(
-                          _getStatusText(originalStatus),
-                          style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600,
-                              ),
-                        ),
-                      ),
                     ],
                   ),
 
@@ -327,7 +323,7 @@ class _AnimeDetailsScreenState extends ConsumerState<AnimeDetailsScreen> {
                               },
                               icon: const Icon(Icons.add),
                               label: Text(
-                                _getStatusText(originalStatus) == 'Not in List'
+                                _getStatusText(anime['status']) == 'Not in List'
                                     ? 'Add to List'
                                     : 'Edit List',
                               ),
@@ -421,9 +417,9 @@ class _AnimeDetailsScreenState extends ConsumerState<AnimeDetailsScreen> {
                                   ),
                                 ),
                               ),
-                              if (episodes != null) ...[
+                              if (anime['episodes'] != null) ...[
                                 const SizedBox(width: 8),
-                                Text('/ $episodes'),
+                                Text('/ ${anime['episodes']}'),
                               ],
                             ],
                           ),
@@ -510,6 +506,9 @@ class _AnimeDetailsScreenState extends ConsumerState<AnimeDetailsScreen> {
                                     SnackBar(
                                       content: Text(
                                         'Anime updated in your list!',
+                                        style: const TextStyle(
+                                          fontFamily: 'Poppins',
+                                        ),
                                       ),
                                     ),
                                   );
@@ -544,6 +543,9 @@ class _AnimeDetailsScreenState extends ConsumerState<AnimeDetailsScreen> {
                                     SnackBar(
                                       content: Text(
                                         'Failed to update list: $e',
+                                        style: const TextStyle(
+                                          fontFamily: 'Poppins',
+                                        ),
                                       ),
                                     ),
                                   );
@@ -650,6 +652,7 @@ class _AnimeDetailsScreenState extends ConsumerState<AnimeDetailsScreen> {
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.bold,
             color: AppColors.textPrimary,
+            fontFamily: 'Poppins',
           ),
         ),
         const SizedBox(height: 8),
@@ -663,6 +666,7 @@ class _AnimeDetailsScreenState extends ConsumerState<AnimeDetailsScreen> {
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
             color: AppColors.textSecondary,
             height: 1.5,
+            fontFamily: 'Poppins',
           ),
         ),
         if (isLongDescription) ...[
@@ -679,6 +683,7 @@ class _AnimeDetailsScreenState extends ConsumerState<AnimeDetailsScreen> {
                 color: AppColors.textPrimary,
                 fontWeight: FontWeight.w600,
                 decoration: TextDecoration.underline,
+                fontFamily: 'Poppins',
               ),
             ),
           ),
@@ -701,6 +706,7 @@ class _AnimeDetailsScreenState extends ConsumerState<AnimeDetailsScreen> {
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.bold,
             color: AppColors.textPrimary,
+            fontFamily: 'Poppins',
           ),
         ),
         const SizedBox(height: 12),
@@ -754,6 +760,7 @@ class _AnimeDetailsScreenState extends ConsumerState<AnimeDetailsScreen> {
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: AppColors.textPrimary,
                         fontWeight: FontWeight.w600,
+                        fontFamily: 'Poppins',
                       ),
                       textAlign: TextAlign.center,
                       maxLines: 1,
@@ -763,6 +770,7 @@ class _AnimeDetailsScreenState extends ConsumerState<AnimeDetailsScreen> {
                       role ?? 'Unknown',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: AppColors.textSecondary,
+                        fontFamily: 'Poppins',
                       ),
                       textAlign: TextAlign.center,
                       maxLines: 2,
@@ -789,6 +797,7 @@ class _AnimeDetailsScreenState extends ConsumerState<AnimeDetailsScreen> {
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.bold,
             color: AppColors.textPrimary,
+            fontFamily: 'Poppins',
           ),
         ),
         const SizedBox(height: 12),
@@ -842,6 +851,7 @@ class _AnimeDetailsScreenState extends ConsumerState<AnimeDetailsScreen> {
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: AppColors.textPrimary,
                         fontWeight: FontWeight.w600,
+                        fontFamily: 'Poppins',
                       ),
                       textAlign: TextAlign.center,
                       maxLines: 1,
@@ -851,6 +861,7 @@ class _AnimeDetailsScreenState extends ConsumerState<AnimeDetailsScreen> {
                       role ?? 'Unknown',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: AppColors.textSecondary,
+                        fontFamily: 'Poppins',
                       ),
                       textAlign: TextAlign.center,
                       maxLines: 2,
@@ -934,6 +945,7 @@ class _AnimeDetailsScreenState extends ConsumerState<AnimeDetailsScreen> {
                   label,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                     color: AppColors.textSecondary,
+                    fontFamily: 'Poppins',
                   ),
                 ),
                 Text(
@@ -941,6 +953,7 @@ class _AnimeDetailsScreenState extends ConsumerState<AnimeDetailsScreen> {
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: AppColors.textPrimary,
                     fontWeight: FontWeight.w600,
+                    fontFamily: 'Poppins',
                   ),
                 ),
               ],
@@ -995,18 +1008,15 @@ class _AnimeDetailsScreenState extends ConsumerState<AnimeDetailsScreen> {
         anime['title']['userPreferred'] ??
         anime['title']['english'] ??
         'Unknown Title';
-    final totalEpisodes = anime['episodes'] ?? 12;
-    final coverImage = anime['coverImage']?['large'];
-    final animeId = anime['id'];
+
+    // Open enhanced WebView directly
+    final encodedTitle = Uri.encodeComponent(animeTitle.replaceAll(' ', '+'));
+    final url = 'https://animekai.bz/browser?keyword=$encodedTitle';
 
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => EpisodeBlocksScreen(
-          animeTitle: animeTitle,
-          totalEpisodes: totalEpisodes,
-          coverImage: coverImage,
-          animeId: animeId,
-        ),
+        builder: (context) =>
+            EnhancedWebViewScreen(title: animeTitle, url: url),
       ),
     );
   }

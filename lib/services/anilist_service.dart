@@ -642,7 +642,6 @@ class AniListService {
         throw Exception('Failed to load episode availability');
       }
     } catch (e) {
-      print('Error fetching episode availability: $e');
       // Return empty map on error
       return {};
     }
